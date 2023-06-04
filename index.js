@@ -10,4 +10,4 @@ connectDatabase();
 app.use(express.json());
 app.use("/user", userRoute);
 
-app.listen(3000, () => console.log(`Servidor rodando na porta ${port}`));
+app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
