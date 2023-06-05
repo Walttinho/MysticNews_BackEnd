@@ -10,6 +10,9 @@ route.get("/", userController.findAll);
 // Rota para obter um usuário pelo ID
 route.get("/:id", userController.findById);
 
+// Rota para obter um usuário pelo ID
+route.patch("/:id", userController.updateUser);
+
 module.exports = route;
- 
+
   

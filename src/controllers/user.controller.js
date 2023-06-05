@@ -84,8 +84,44 @@ const findById = async (req, res) => {
   }
 };
 
+// Função para obter um usuário pelo ID
+const updateUser = async (req, res) => {
+  const { name, username, email, password, avatar, background } = req.body;
+  // Verifica se todos os campos obrigatórios foram fornecidos
+  if (!name && !username && !email && !password && !avatar && !background) {
+    return res
+      .status(400)
+      .send({ message: "Submit at least one fields for update" });
+  }
+  const id = req.params.id;
+
+  // Verifica se o ID fornecido é um ObjectId válido
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({ message: "Invalid ID" });
+  }
+  const user = await userService.findByIdService(id);
+
+  if (!user) {
+    return res.status(400).send({ message: "User not Found" });
+  }
+
+  await userService.updateService(
+    id,
+    name,
+    username,
+    email,
+    password,
+    avatar,
+    background
+  );
+
+  res.send({message: 'User Seccessfully update!'})
+
+};
+
 module.exports = {
   createUser,
   findAll,
   findById,
+  updateUser,
 };
