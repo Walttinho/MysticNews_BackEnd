@@ -31,8 +31,8 @@ const createUser = async (req, res) => {
         background,
       },
     });
-    //Captura e trata qualquer erro
   } catch (error) {
+    // Captura e trata qualquer erro
     console.error("Error creating user:", error);
     res.status(500).send({ message: "Error creating user" });
   }
@@ -51,7 +51,7 @@ const findAll = async (req, res) => {
     // Retorna a resposta com todos os usuários
     res.send(users);
   } catch (error) {
-    //Captura e trata qualquer erro
+    // Captura e trata qualquer erro
     console.error("Error finding users:", error);
     res.status(500).send({ message: "Error finding users" });
   }
@@ -59,33 +59,46 @@ const findAll = async (req, res) => {
 
 // Função para obter um usuário pelo ID
 const findById = async (req, res) => {
+  try {
     const user = req.user;
     res.send(user);
-
+  } catch (error) {
+    // Captura e trata qualquer erro
+    console.error("Error finding user:", error);
+    res.status(500).send({ message: "Error finding user" });
+  }
 };
 
-// Função para obter um usuário pelo ID
+// Função para atualizar um usuário
 const updateUser = async (req, res) => {
   const { name, username, email, password, avatar, background } = req.body;
-  // Verifica se algum os campos foram preenchido
+
+  // Verifica se algum campo foi preenchido
   if (!name && !username && !email && !password && !avatar && !background) {
     return res
       .status(400)
-      .send({ message: "Submit at least one fields for update" });
+      .send({ message: "Submit at least one field for update" });
   }
-  const {id, user} = req;
 
-  await userService.updateService(
-    id,
-    name,
-    username,
-    email,
-    password,
-    avatar,
-    background
-  );
+  const { id, user } = req;
 
-  res.send({ message: "User Seccessfully update!" });
+  try {
+    await userService.updateService(
+      id,
+      name,
+      username,
+      email,
+      password,
+      avatar,
+      background
+    );
+
+    res.send({ message: "User successfully updated!" });
+  } catch (error) {
+    // Captura e trata qualquer erro
+    console.error("Error updating user:", error);
+    res.status(500).send({ message: "Error updating user" });
+  }
 };
 
 module.exports = {
