@@ -1,5 +1,4 @@
 const userService = require("../services/user.service");
-const mongoose = require("mongoose");
 
 // Função para criar um novo usuário
 const createUser = async (req, res) => {
@@ -60,50 +59,21 @@ const findAll = async (req, res) => {
 
 // Função para obter um usuário pelo ID
 const findById = async (req, res) => {
-  const id = req.params.id;
-
-  // Verifica se o ID fornecido é um ObjectId válido
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({ message: "Invalid ID" });
-  }
-
-  try {
-    // Obtém o usuário pelo ID usando o serviço de busca pelo ID
-    const user = await userService.findByIdService(id);
-
-    if (!user) {
-      return res.status(400).send({ message: "User not found" });
-    }
-
-    // Retorna a resposta com o usuário encontrado
+    const user = req.user;
     res.send(user);
-  } catch (error) {
-    //Captura e trata qualquer erro
-    console.error("Error finding user by ID:", error);
-    res.status(500).send({ message: "Error finding user by ID" });
-  }
+
 };
 
 // Função para obter um usuário pelo ID
 const updateUser = async (req, res) => {
   const { name, username, email, password, avatar, background } = req.body;
-  // Verifica se todos os campos obrigatórios foram fornecidos
+  // Verifica se algum os campos foram preenchido
   if (!name && !username && !email && !password && !avatar && !background) {
     return res
       .status(400)
       .send({ message: "Submit at least one fields for update" });
   }
-  const id = req.params.id;
-
-  // Verifica se o ID fornecido é um ObjectId válido
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({ message: "Invalid ID" });
-  }
-  const user = await userService.findByIdService(id);
-
-  if (!user) {
-    return res.status(400).send({ message: "User not Found" });
-  }
+  const {id, user} = req;
 
   await userService.updateService(
     id,
@@ -115,8 +85,7 @@ const updateUser = async (req, res) => {
     background
   );
 
-  res.send({message: 'User Seccessfully update!'})
-
+  res.send({ message: "User Seccessfully update!" });
 };
 
 module.exports = {
