@@ -1,4 +1,4 @@
-const userService = require("../services/user.service");
+import userService from "../services/user.service.js";
 
 // Função para criar um novo usuário
 const createUser = async (req, res) => {
@@ -101,9 +101,9 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = {
-  createUser,
+export default {
   findAll,
   findById,
   updateUser,
+  createUser,
 };

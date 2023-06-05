@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const userService = require("../services/user.service");
+import mongoose from "mongoose";
+import userService  from "../services/user.service.js";
 
 // Middleware para validar o ID
-const validId = (req, res, next) => {
+export const validId = (req, res, next) => {
   const id = req.params.id;
 
   try {
@@ -18,7 +18,7 @@ const validId = (req, res, next) => {
 };
 
 // Middleware para validar o usuário
-const validUser = async (req, res, next) => {
+export const validUser = async (req, res, next) => {
   const id = req.params.id;
 
   try {
@@ -36,9 +36,4 @@ const validUser = async (req, res, next) => {
     // Em caso de erro, envia uma resposta com o status 500 (Internal Server Error)
     res.status(500).send({ message: "An error occurred" });
   }
-};
-
-module.exports = {
-  validId,
-  validUser,
 };
