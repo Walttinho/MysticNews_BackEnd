@@ -1,5 +1,5 @@
 {
-  "name": "api-brakenews",
+  "name": "api-Mystic_news",
   "version": "1.0.0",
   "type": "module",
   "description": " ",
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.18.2",
     "mongoose": "^7.2.2",
     "nodemon": "^2.0.22"
