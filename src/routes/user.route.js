@@ -1,8 +1,8 @@
-import express from "express";
+import {Router} from "express";
 import userController from "../controllers/user.controller.js";
 import { validId, validUser } from "../middlewares/global.middlewares.js";
 
-const router = express.Router();
+const router = Router();
 
 // Rota para criar um novo usuário
 router.post("/", userController.createUser);
