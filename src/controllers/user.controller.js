@@ -1,7 +1,7 @@
 import userService from "../services/user.service.js";
 
 // Função para criar um novo usuário
-const createUser = async (req, res) => {
+const create = async (req, res) => {
   const { name, username, email, password, avatar, background } = req.body;
 
   // Verifica se todos os campos obrigatórios foram fornecidos
@@ -105,5 +105,5 @@ export default {
   findAll,
   findById,
   updateUser,
-  createUser,
+  create,
 };
