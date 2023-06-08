@@ -6,6 +6,5 @@ const loginService = (email) =>
 
 const generateToken = (id) =>
   jwt.sign({ id: id }, process.env.SECRET_JWT, {expiresIn: 86400});
-console.log(generateToken);
 
 export { loginService, generateToken };
