@@ -5,7 +5,8 @@ import {
   topNewsService,
   finByIdService,
   searchByTitleService,
-  byUserService
+  byUserService,
+  updateNewsService,
 } from "../services/news.service.js";
 
 export const create = async (req, res) => {
@@ -112,7 +113,7 @@ export const topNews = async (req, res) => {
     });
   } catch (error) {
     // Captura e trata qualquer erro
-    res.status(500).send({ message: error.message});
+    res.status(500).send({ message: error.message });
   }
 };
 
@@ -135,7 +136,7 @@ export const findById = async (req, res) => {
     });
   } catch (error) {
     // Captura e trata qualquer erro
-    res.status(500).send({ message: error.message});
+    res.status(500).send({ message: error.message });
   }
 };
 export const searchByTitle = async (req, res) => {
@@ -144,11 +145,9 @@ export const searchByTitle = async (req, res) => {
     const news = await searchByTitleService(title);
 
     if (news.length === 0) {
-      return res
-        .status(400)
-        .send({ message: error.message });
+      return res.status(400).send({ message: error.message });
     }
-   
+
     return res.send({
       results: news.map((item) => ({
         id: item._id,
@@ -160,17 +159,18 @@ export const searchByTitle = async (req, res) => {
         name: item.user.name,
         username: item.user.username,
         userAvatar: item.user.avatar,
-    }))})
+      })),
+    });
   } catch (error) {
     // Captura e trata qualquer erro
-    res.status(500).send({ message: error.message});
+    res.status(500).send({ message: error.message });
   }
 };
 
 export const byUser = async (req, res) => {
-  try{
-    const id = req.userId
-    const news = await byUserService(id)
+  try {
+    const id = req.userId;
+    const news = await byUserService(id);
 
     return res.send({
       results: news.map((item) => ({
@@ -183,11 +183,34 @@ export const byUser = async (req, res) => {
         name: item.user.name,
         username: item.user.username,
         userAvatar: item.user.avatar,
-    }))})
-
+      })),
+    });
   } catch (error) {
     // Captura e trata qualquer erro
-    res.status(500).send({ message: error.message});
+    res.status(500).send({ message: error.message });
   }
+};
+export const updateNews = async (req, res) => {
+  try {
+    const { title, text, banner } = req.body;
+    const { id } = req.params;
 
-}
+    if (!title && !banner && !text) {
+      res.send(400).send({
+        message: "Submit all fields for registration",
+      });
+    }
+
+    const news = await finByIdService(id);
+    
+    if (news.user.id != req.userId) {
+      return res.status(400).send({ message: error.message });
+    }
+
+    await updateNewsService(id, title, text, banner);
+    return res.send({ message: "News successfully updated" });
+  } catch (error) {
+    // Captura e trata qualquer erro
+    res.status(500).send({ message: error.message });
+  }
+};

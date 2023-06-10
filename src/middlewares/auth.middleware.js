@@ -22,7 +22,6 @@ export const authMiddleware = (req, res, next) => {
     }
 
     jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
-      console.log(decoded);
       if (error) {
         return res.status(401).send({ message: "Token Invalid" });
       }
