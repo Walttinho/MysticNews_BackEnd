@@ -2,6 +2,7 @@ import {
   createService,
   findAllService,
   countNewsService,
+  topNewsService,
 } from "../services/news.service.js";
 
 const create = async (req, res) => {
@@ -30,53 +31,86 @@ const create = async (req, res) => {
 };
 
 const findAll = async (req, res) => {
-  let { limit, offset } = req.query;
-  limit = Number(limit);
-  offset = Number(offset);
+  try {
+    let { limit, offset } = req.query;
+    limit = Number(limit);
+    offset = Number(offset);
 
-  if (!limit) {
-    limit = 5;
+    if (!limit) {
+      limit = 5;
+    }
+    if (!offset) {
+      offset = 0;
+    }
+
+    const news = await findAllService(offset, limit);
+    const totalNews = await countNewsService();
+    const currentUrl = req.baseUrl;
+
+    const next = offset + limit;
+    const nextUrl =
+      next < totalNews ? `${currentUrl}?limit=${limit}&offset=${next}` : null;
+
+    const previous = offset - limit < 0 ? null : offset - limit;
+    const previousUrl =
+      previous != null
+        ? `${currentUrl}?limit=${limit}&offset=${previous}`
+        : null;
+
+    if (news.length === 0) {
+      return res.status(400).send({ message: "There are no registered news" });
+    }
+
+    res.send({
+      nextUrl,
+      previousUrl,
+      limit,
+      offset,
+      totalNews,
+
+      results: news.map((item) => ({
+        id: item._id,
+        title: item.title,
+        text: item.text,
+        banner: item.banner,
+        likes: item.likes,
+        comments: item.comments,
+        name: item.user.name,
+        username: item.user.username,
+        userAvatar: item.user.avatar,
+      })),
+    });
+  } catch (error) {
+    // Captura e trata qualquer erro
+    res.status(500).send({ message: error.message });
   }
-  if (!offset) {
-    offset = 0;
-  }
-
-  const news = await findAllService(offset, limit);
-  const totalNews = await countNewsService();
-  const currentUrl = req.baseUrl;
-  const next = offset + limit;
-  const nextUrl =
-    next < totalNews ? `${currentUrl}?limit=${limit}&offset=${next}` : null;
-  const previous = offset - limit < 0 ? null : offset - limit;
-  const previousUrl =
-    previous != null
-      ? `${currentUrl}?limit=${limit}&offset=${previous}`
-      : null;
-
-  if (news.length === 0) {
-    return res.status(400).send({ message: "There are no registered news" });
-  }
-
-  res.send({
-    nextUrl,
-    previousUrl,
-    limit,
-    offset,
-    totalNews,
-
-    results: news.map ((item) => ({
-      id: item._id,
-      title: item.title,
-      text: item.text,
-      banner: item.banner,
-      likes: item.likes,
-      comments: item.comments,
-      name: item.user.name,
-      username: item.user.username,
-      userAvatar: item.user.avatar,
-
-    }))
-  });
 };
 
-export { create, findAll };
+const topNews = async (req, res) => {
+  try {
+    const news = await topNewsService();
+
+    if (!news) {
+      return res.status(400).send({ message: "There are no registered news" });
+    }
+
+    res.send({
+      news: {
+        id: news._id,
+        title: news.title,
+        text: news.text,
+        banner: news.banner,
+        likes: news.likes,
+        comments: news.comments,
+        name: news.user.name,
+        username: news.user.username,
+        userAvatar: news.user.avatar,
+      },
+    });
+  } catch (error) {
+    // Captura e trata qualquer erro
+    res.status(500).send({ message: "There are no registered news" });
+  }
+};
+
+export { create, findAll, topNews };
