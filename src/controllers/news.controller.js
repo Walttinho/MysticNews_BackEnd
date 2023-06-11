@@ -7,6 +7,7 @@ import {
   searchByTitleService,
   byUserService,
   updateNewsService,
+  deleteNewsService,
 } from "../services/news.service.js";
 
 export const create = async (req, res) => {
@@ -202,13 +203,29 @@ export const updateNews = async (req, res) => {
     }
 
     const news = await finByIdService(id);
-    
+
     if (news.user.id != req.userId) {
       return res.status(400).send({ message: error.message });
     }
 
     await updateNewsService(id, title, text, banner);
     return res.send({ message: "News successfully updated" });
+  } catch (error) {
+    // Captura e trata qualquer erro
+    res.status(500).send({ message: error.message });
+  }
+};
+export const deleteNews = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const news = await finByIdService(id);
+
+    if (news.user.id != req.userId) {
+      return res.status(400).send({ message: error.message });
+    }
+
+    await deleteNewsService(id);
+    return res.send({ message: "News deleted successfully" });
   } catch (error) {
     // Captura e trata qualquer erro
     res.status(500).send({ message: error.message });
