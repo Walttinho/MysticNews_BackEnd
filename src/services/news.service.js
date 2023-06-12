@@ -29,3 +29,12 @@ export const updateNewsService = (id, title, text, banner) =>
     { rawResult: true }
   );
 export const deleteNewsService = (id) => News.findOneAndDelete({ _id: id });
+
+export const newsLikedService = (idNews, userId) =>
+  News.findOneAndUpdate(
+    { _id: idNews, "likes.userId": { $nin: [userId] } },
+    { $push: { likes: { userId, created: new Date() } } }
+  );
+
+export const deleteNewsLikedService = (idNews, userId) =>
+  News.findOneAndUpdate({ _id: idNews }, { $pull: { likes: { userId } } });
