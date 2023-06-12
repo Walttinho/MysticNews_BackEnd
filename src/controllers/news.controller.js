@@ -10,6 +10,7 @@ import {
   deleteNewsService,
   newsLikedService,
   deleteNewsLikedService,
+  addCommentNewsService,
 } from "../services/news.service.js";
 
 export const create = async (req, res) => {
@@ -142,6 +143,7 @@ export const findById = async (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
+
 export const searchByTitle = async (req, res) => {
   try {
     const { title } = req.query;
@@ -247,6 +249,25 @@ export const likeNews = async (req, res) => {
     }
 
     return res.send({ message: "News liked successfully" });
+  } catch (error) {
+    // Captura e trata qualquer erro
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const addCommentNews = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.userId;
+    const { comment } = req.body;
+
+    if (!comment) {
+      return res.status(400).send({ message: "Writer a message to comment" });
+    }
+
+    await addCommentNewsService(id, comment, userId);
+
+    res.send({ message: "Comment successfully completed" });
   } catch (error) {
     // Captura e trata qualquer erro
     res.status(500).send({ message: error.message });
