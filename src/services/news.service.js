@@ -51,3 +51,9 @@ export const addCommentNewsService = (idNews, comment, userId) => {
     }
   );
 };
+
+export const delCommentNewsService = (idNews, idComment, userId) =>
+  News.findOneAndUpdate(
+    { _id: idNews },
+    { $pull: { comments: { idComment, userId } } }
+  );
