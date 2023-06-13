@@ -289,11 +289,13 @@ export const delCommentNews = async (req, res) => {
     const commentFinder = commentDeleted.comments.find(
       (comment) => comment.idComment === idComment
     );
+    console.log(commentFinder);
+    console.log(commentFinder.userId, userId);
     if (!commentFinder) {
       return res.status(404).send({ message: "Comment not found" });
     }
 
-    if (commentFinder.comment.userId !== userId) {
+    if (commentFinder.userId != userId) {
       return res.status(400).send({ message: "You can't delete this comment" });
     }
 
