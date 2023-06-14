@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import { config, bcrypt, jwt } from "../config.js";
+import { config, bcrypt, jwt } from "../config/config.js";
 
 // Serviço para fazer o login
 // Service for user login

@@ -1,14 +1,30 @@
-import newsService from "../services/news.service.js";
+import {
+  createService,
+  findAllService,
+  countNewsService,
+  topNewsService,
+  findByIdService,
+  searchByTitleService,
+  byUserService,
+  updateNewsService,
+  deleteNewsService,
+  newsLikedService,
+  deleteNewsLikedService,
+  addCommentNewsService,
+  delCommentNewsService,
+} from "../services/news.service.js";
 
 // Função para criar uma nova notícia
 // Function to create a new news
-const create = async (req, res) => {
+export const create = async (req, res) => {
   const { title, content, author } = req.body;
 
   // Verifica se todos os campos obrigatórios foram fornecidos
   // Checks if all required fields were provided
   if (!title || !content || !author) {
-    return res.status(400).send({ message: "Submit all fields for news creation" });
+    return res
+      .status(400)
+      .send({ message: "Submit all fields for news creation" });
   }
 
   try {
@@ -17,7 +33,9 @@ const create = async (req, res) => {
     const news = await newsService.createService(req.body);
 
     if (!news) {
-      return res.status(400).send({ message: "Failed to perform the operation" });
+      return res
+        .status(400)
+        .send({ message: "Failed to perform the operation" });
     }
 
     // Retorna a resposta com a notícia criada
@@ -36,7 +54,7 @@ const create = async (req, res) => {
 
 // Função para obter todas as notícias
 // Function to get all news
-const findAll = async (req, res) => {
+export const findAll = async (req, res) => {
   try {
     // Obtém todas as notícias usando o serviço de busca de todas as notícias
     // Gets all news using the service to find all news
@@ -59,14 +77,16 @@ const findAll = async (req, res) => {
 
 // Função para obter as notícias mais populares
 // Function to get top news
-const topNews = async (req, res) => {
+export const topNews = async (req, res) => {
   try {
     // Obtém as notícias mais populares usando o serviço de busca de notícias mais populares
     // Gets the top news using the service to find top news
     const news = await newsService.topNewsService();
 
     if (news.length === 0) {
-      return res.status(400).send({ message: "There are no top news available" });
+      return res
+        .status(400)
+        .send({ message: "There are no top news available" });
     }
 
     // Retorna a resposta com as notícias mais populares
@@ -82,7 +102,7 @@ const topNews = async (req, res) => {
 
 // Função para obter uma notícia pelo ID
 // Function to get a news by ID
-const findById = async (req, res) => {
+export const findById = async (req, res) => {
   try {
     const news = req.news;
     res.send(news);
@@ -96,7 +116,7 @@ const findById = async (req, res) => {
 
 // Função para buscar notícias por título
 // Function to search news by title
-const searchByTitle = async (req, res) => {
+export const searchByTitle = async (req, res) => {
   const { title } = req.query;
 
   // Verifica se o parâmetro de pesquisa foi fornecido
@@ -111,7 +131,9 @@ const searchByTitle = async (req, res) => {
     const news = await newsService.searchByTitleService(title);
 
     if (news.length === 0) {
-      return res.status(400).send({ message: "No news found with the given title" });
+      return res
+        .status(400)
+        .send({ message: "No news found with the given title" });
     }
 
     // Retorna a resposta com as notícias encontradas
@@ -127,7 +149,7 @@ const searchByTitle = async (req, res) => {
 
 // Função para buscar notícias por usuário
 // Function to search news by user
-const byUser = async (req, res) => {
+export const byUser = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -136,7 +158,9 @@ const byUser = async (req, res) => {
     const news = await newsService.searchByUserService(userId);
 
     if (news.length === 0) {
-      return res.status(400).send({ message: "No news found for the given user" });
+      return res
+        .status(400)
+        .send({ message: "No news found for the given user" });
     }
 
     // Retorna a resposta com as notícias encontradas
@@ -152,13 +176,15 @@ const byUser = async (req, res) => {
 
 // Função para atualizar uma notícia
 // Function to update a news
-const updateNews = async (req, res) => {
+export const updateNews = async (req, res) => {
   const { title, content } = req.body;
 
   // Verifica se algum campo foi preenchido
   // Checks if any field was filled
   if (!title && !content) {
-    return res.status(400).send({ message: "Submit at least one field for update" });
+    return res
+      .status(400)
+      .send({ message: "Submit at least one field for update" });
   }
 
   try {
@@ -181,7 +207,7 @@ const updateNews = async (req, res) => {
 
 // Função para deletar uma notícia
 // Function to delete a news
-const deleteNews = async (req, res) => {
+export const deleteNews = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -202,7 +228,7 @@ const deleteNews = async (req, res) => {
 
 // Função para dar like em uma notícia
 // Function to like a news
-const likeNews = async (req, res) => {
+export const likeNews = async (req, res) => {
   try {
     const { id } = req.params;
     const { userId } = req.user;
@@ -236,10 +262,9 @@ const likeNews = async (req, res) => {
   }
 };
 
-
 // Função para adicionar um comentário em uma notícia
 // Function to add a comment to a news
-const addCommentNews = async (req, res) => {
+export const addCommentNews = async (req, res) => {
   const { comment } = req.body;
 
   // Verifica se o comentário foi fornecido
@@ -268,7 +293,7 @@ const addCommentNews = async (req, res) => {
 
 // Função para deletar um comentário em uma notícia
 // Function to delete a comment from a news
-const delCommentNews = async (req, res) => {
+export const delCommentNews = async (req, res) => {
   try {
     const { idNews, idComment } = req.params;
 
@@ -287,16 +312,4 @@ const delCommentNews = async (req, res) => {
   }
 };
 
-export default {
-  create,
-  findAll,
-  topNews,
-  findById,
-  searchByTitle,
-  byUser,
-  updateNews,
-  deleteNews,
-  likeNews,
-  addCommentNews,
-  delCommentNews,
-};
+

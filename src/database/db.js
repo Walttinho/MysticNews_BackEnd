@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-import { config } from "../config.js";
+import {config} from "../config/config.js";
 
 const connectDatabase = async () => {
   console.log("Wait connecting to the database");
   try {
+  
     // Conecta ao banco de dados MongoDB utilizando a URL fornecida no arquivo de configuração
     // Connect to the MongoDB database using the URL provided in the config file
     await mongoose.connect(config.mongoDBUri, {

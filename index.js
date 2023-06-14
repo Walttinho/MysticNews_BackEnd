@@ -1,6 +1,6 @@
 import express from "express";
 import connectDatabase from "./src/database/db.js";
-import config from "./config.js";
+import {config} from "./src/config/config.js";
 import userRoute from "./src/routes/user.route.js";
 import authRoute from "./src/routes/auth.route.js";
 import newsRoute from "./src/routes/news.route.js";

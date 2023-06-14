@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import { config } from "../config.js"
+import { config } from "../config/config.js"
 import userService from "../services/user.service.js";
 dotenv.config();
 
