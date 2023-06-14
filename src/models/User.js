@@ -1,41 +1,49 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcryptjs';
 
+// Esquema para a coleção de usuários
+// Schema for the users collection
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    require: true,
+    required: true,
   },
   username: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
     lowercase: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
     select: false,
   },
   avatar: {
     type: String,
-    require: true,
+    required: true,
   },
   background: {
     type: String,
-    require: true,
+    required: true,
   },
 });
+
+// Função executada antes de salvar um usuário no banco de dados
+// Function executed before saving a user to the database
 UserSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
+// Modelo para a coleção de usuários
+// Model for the users collection
 const User = mongoose.model("User", UserSchema);
 
 export default User;
+
