@@ -1,7 +1,14 @@
 import User from "../models/User.js";
+<<<<<<< HEAD
 import { config, jwt, bcrypt } from "../../config.js";
 
 // Serviço para fazer o login
+=======
+import { config, bcrypt, jwt } from "../config/config.js";
+
+// Serviço para fazer o login
+// Service for user login
+>>>>>>> c4d61ee70c04b90e5991deea58aa75604acf76e1
 const loginService = async (email, password) => {
   try {
     const user = await User.findOne({ email: email }).select("+password");
@@ -16,6 +23,10 @@ const loginService = async (email, password) => {
 };
 
 // Função para gerar o token de autenticação
+<<<<<<< HEAD
+=======
+// Function to generate authentication token
+>>>>>>> c4d61ee70c04b90e5991deea58aa75604acf76e1
 const generateToken = (id) => {
   try {
     const token = jwt.sign({ id: id }, config.jwtSecret, {
@@ -29,3 +40,4 @@ const generateToken = (id) => {
 };
 
 export { loginService, generateToken };
+

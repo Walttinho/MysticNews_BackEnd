@@ -1,23 +1,27 @@
 import mongoose from "mongoose";
 
 // Esquema para a coleção de notícias
+<<<<<<< HEAD
+=======
+// Schema for the news collection
+>>>>>>> c4d61ee70c04b90e5991deea58aa75604acf76e1
 const NewsSchema = mongoose.Schema({
   title: {
     type: String,
-    require: true,
+    required: true,
   },
 
   text: {
     type: String,
-    require: true,
+    required: true,
   },
 
   banner: {
     type: String,
-    require: true,
+    required: true,
   },
 
-  createAt: {
+  createdAt: {
     type: Date,
     default: Date.now(),
   },
@@ -25,21 +29,28 @@ const NewsSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    require: true,
+    required: true,
   },
 
   likes: {
     type: Array,
-    require: true,
+    required: true,
   },
 
   comments: {
     type: Array,
-    require: true,
+    required: true,
   },
 });
 
 // Modelo para a coleção de notícias
+<<<<<<< HEAD
 const News = mongoose.model("News", NewsSchema)
 
 export default News
+=======
+// Model for the news collection
+const News = mongoose.model("News", NewsSchema);
+
+export default News;
+>>>>>>> c4d61ee70c04b90e5991deea58aa75604acf76e1
