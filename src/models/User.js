@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { config, bcrypt } from "../../config";
+import { config, bcrypt } from "../../config.js";
 
 // Esquema para a coleção de usuários
 const UserSchema = new mongoose.Schema({
