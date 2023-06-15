@@ -62,9 +62,4 @@ Contribuições são bem-vindas! Se você quiser contribuir para este projeto, s
 5. Envie um Pull Request
 
 ## Licença
-<<<<<<< HEAD
 Este projeto está licenciado sob a licença nenhuma
-=======
-Este projeto está licenciado sob a licença
-
->>>>>>> c4d61ee70c04b90e5991deea58aa75604acf76e1
