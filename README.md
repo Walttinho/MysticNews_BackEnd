@@ -1,6 +1,3 @@
-Claro! Aqui está um exemplo de como você pode estruturar o arquivo `README.md` com base nas informações fornecidas:
-
-markdown
 # Mystic-BRAKENEWS
 
 ![Project Banner](banner.png)
