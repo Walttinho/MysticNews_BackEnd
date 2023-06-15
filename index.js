@@ -1,14 +1,14 @@
 import express from "express";
 import connectDatabase from "./src/database/db.js";
-import dotenv from "dotenv";
+import { config } from "./config.js";
+
 
 import userRoute from "./src/routes/user.route.js";
 import authRoute from "./src/routes/auth.route.js";
 import newsRoute from "./src/routes/news.route.js";
 
-dotenv.config();
 
-const port = process.env.PORT || 3000;
+const port = config.port;
 const app = express();
 
 connectDatabase();
