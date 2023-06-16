@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { loginService, generateToken } from "../services/auth.service.js";
+import { loginService, generateToken, logoutService } from "../services/auth.service.js";
 
 // Função para realizar o login
 const login = async (req, res) => {
@@ -23,4 +23,20 @@ const login = async (req, res) => {
   }
 };
 
-export { login };
+// Função para realizar o logout
+const logout = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    // Chame o serviço de logout
+    const result = await logoutService(userId);
+
+    // Retorna a resposta com a mensagem de logout bem-sucedido
+    res.send(result);
+  } catch (error) {
+    // Captura e trata qualquer erro
+    console.error("Logout error:", error);
+    res.status(500).send({ message: "Logout error" });
+  }
+};
+
+export { login, logout };
