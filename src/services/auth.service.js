@@ -5,9 +5,6 @@ import { config, jwt, bcrypt } from "../../config.js";
 const loginService = async (email, password) => {
   try {
     const user = await User.findOne({ email: email }).select("+password");
-    if (!user || !bcrypt.compareSync(password, user.password)) {
-      return null;
-    }
     return user;
   } catch (error) {
     console.error("Login error:", error);
@@ -19,7 +16,7 @@ const loginService = async (email, password) => {
 const generateToken = (id) => {
   try {
     const token = jwt.sign({ id: id }, config.jwtSecret, {
-      expiresIn: config.jwtExpiration,
+      expiresIn: 86000,
     });
     return token;
   } catch (error) {
@@ -46,7 +43,7 @@ const logoutService = async (userId, token) => {
     const user = await User.findById(userId);
     user.token = null;
     await user.save();
-    console.log(user.token)
+    console.log(user.token);
 
     // Retorne uma mensagem indicando que o logout foi bem-sucedido
     return { message: "Logout successful" };
