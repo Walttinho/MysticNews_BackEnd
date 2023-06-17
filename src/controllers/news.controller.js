@@ -18,24 +18,24 @@ import {
 export const create = async (req, res) => {
   try {
     const { title, text, banner } = req.body;
-// Verifica se todos os campos obrigatórios foram fornecidos
+    // Verifica se todos os campos obrigatórios foram fornecidos
     if (!title || !banner || !text) {
       res.send(400).send({
         message: "Submit all fields for registration",
       });
     }
- // Cria a notícia usando o serviço de criação de notícias
-    await createService({
+    // Cria a notícia usando o serviço de criação de notícias
+    const createdNews = await createService({
       title,
       text,
       banner,
       user: req.userId,
     });
 
- // Retorna a resposta com a notícia criada
+    // Retorna a resposta com a notícia criada
     res.status(201).send({
       message: "News created successfully",
-      news,
+      news: createdNews,
     });
   } catch (error) {
     // Captura e trata qualquer erro
@@ -223,8 +223,8 @@ export const updateNews = async (req, res) => {
 
     if (!title && !banner && !text) {
       return res
-      .status(400)
-      .send({ message: "Submit at least one field for update" });
+        .status(400)
+        .send({ message: "Submit at least one field for update" });
     }
 
     const news = await findByIdService(id);
