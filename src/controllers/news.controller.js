@@ -227,7 +227,7 @@ export const updateNews = async (req, res) => {
       .send({ message: "Submit at least one field for update" });
     }
 
-    const news = await findByIdSdervice(id);
+    const news = await findByIdService(id);
 
     if (news.user.id != req.userId) {
       return res.status(400).send({ message: error.message });
@@ -246,7 +246,7 @@ export const updateNews = async (req, res) => {
 export const deleteNews = async (req, res) => {
   try {
     const { id } = req.params;
-    const news = await findByIdSdervice(id);
+    const news = await findByIdService(id);
 
     if (news.user.id != req.userId) {
       return res.status(400).send({ message: error.message });
