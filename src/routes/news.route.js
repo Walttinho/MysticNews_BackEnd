@@ -32,7 +32,7 @@ router.get("/search", searchByTitle);
 router.get("/byUser", authMiddleware, byUser);
 
 // Rota para obter uma notícia pelo ID
-router.get("/:id", authMiddleware, findById);
+router.get("/findById/:id", authMiddleware, findById);
 
 // Rota para atualizar uma notícia pelo ID
 router.patch("/:id", authMiddleware, updateNews);

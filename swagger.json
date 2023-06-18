@@ -395,7 +395,7 @@
         }
       }
     },
-    "/news/{id}/": {
+    "/news/findById/{id}/": {
       "get": {
         "summary": "Search News by id",
         "description": "Route responsible for fetching News by id",
@@ -524,7 +524,7 @@
             "in": "path",
             "name": "id",
             "type": "string",
-            "description": "User ID",
+            "description": "News ID",
             "required": true
           }
         ],
@@ -565,7 +565,7 @@
               "examples": {
                 "Comment": {
                   "value": {
-                    "message": "Comentário legal"
+                    "comment": "Comentário legal"
                   }
                 }
               }
