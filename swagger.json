@@ -12,6 +12,10 @@
     {
       "url": "http://localhost:3000",
       "description": "Local Server"
+    },
+    {
+      "url": "https://mystic-brakenews.onrender.com",
+      "description": "Web Server"
     }
   ],
   "paths": {
