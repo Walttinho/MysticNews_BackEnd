@@ -304,6 +304,7 @@ export const addCommentNews = async (req, res) => {
 };
 
 // Função para deletar um comentário em uma notícia
+
 export const delCommentNews = async (req, res) => {
   try {
     const { idNews, idComment } = req.params;
@@ -318,20 +319,20 @@ export const delCommentNews = async (req, res) => {
     const commentFinder = commentDeleted.comments.find(
       (comment) => comment.idComment === idComment
     );
-    console.log(commentFinder);
-    console.log(commentFinder.userId, userId);
+    console.log(commentFinder.userId ,userId )
     if (!commentFinder) {
       return res.status(404).send({ message: "Comment not found" });
     }
 
-    if (commentFinder.userId != userId) {
+    if (!commentFinder.userId.equals(userId)) {
       return res.status(400).send({ message: "You can't delete this comment" });
     }
+    
 
-    res.send({ message: "Comment deleted successfully" });
-  } catch (error) {
-    // Captura e trata qualquer erro
-    console.error("Error deleting comment:", error);
-    res.status(500).send({ message: "Error deleting comment" });
+    res.send({
+      message: "Comment successfully removed!",
+    });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };

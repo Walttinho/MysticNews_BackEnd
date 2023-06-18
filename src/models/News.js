@@ -4,20 +4,20 @@ import mongoose from "mongoose";
 const NewsSchema = mongoose.Schema({
   title: {
     type: String,
-    require: true,
+    required: true,
   },
 
   text: {
     type: String,
-    require: true,
+    required: true,
   },
 
   banner: {
     type: String,
-    require: true,
+    required: true,
   },
 
-  createAt: {
+  createdAt: {
     type: Date,
     default: Date.now(),
   },
@@ -25,21 +25,21 @@ const NewsSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    require: true,
+    required: true,
   },
 
   likes: {
     type: Array,
-    require: true,
+    required: true,
   },
 
   comments: {
     type: Array,
-    require: true,
+    required: true,
   },
 });
 
 // Modelo para a coleção de notícias
-const News = mongoose.model("News", NewsSchema)
+const News = mongoose.model("News", NewsSchema);
 
-export default News
+export default News;
