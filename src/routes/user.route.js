@@ -2,19 +2,19 @@ import {Router} from "express";
 import userController from "../controllers/user.controller.js";
 import { validId, validUser } from "../middlewares/global.middleware.js";
 
-const router = Router();
+const userRouter = Router();
 
 // Rota para criar um novo usuário
-router.post("/create", userController.create);
+userRouter.post("/create", userController.create);
 
 // Rota para obter todos os usuários
-router.get("/", userController.findAll);
+userRouter.get("/", userController.findAll);
 
 // Rota para obter um usuário pelo ID
-router.get("/:id", validId, validUser, userController.findById);
+userRouter.get("/:id", validId, validUser, userController.findById);
 
 // Rota para obter um usuário pelo ID
-router.patch("/:id", validId, validUser, userController.updateUser);
+userRouter.patch("/:id", validId, validUser, userController.updateUser);
 
-export default router;
+export default userRouter;
 
