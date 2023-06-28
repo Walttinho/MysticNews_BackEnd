@@ -1,6 +1,7 @@
 import express from "express";
-import connectDatabase from "./src/database/db.js";
-import { config } from "./config.js";
+import cors from 'cors'
+/* import connectDatabase from "./src/database/db.js"; */
+import { config, connectDatabase } from "./config.js";
 
 import userRoute from "./src/routes/user.route.js";
 import authRoute from "./src/routes/auth.route.js";
@@ -12,15 +13,17 @@ const app = express();
 
 connectDatabase();
 
+app.use(cors())
+
+// Middleware para fazer o parse do corpo das requisições para JSON
+app.use(express.json());
+
 // Middleware para tratar erros
 app.use((err, req, res, next) => {
   // Lógica para tratar o erro
   console.error(err);
   res.status(500).json({ error: "Internal server error" });
 });
-
-// Middleware para fazer o parse do corpo das requisições para JSON
-app.use(express.json());
 
 // Rotas
 app.use("/user", userRoute);
