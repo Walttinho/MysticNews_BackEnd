@@ -8,7 +8,7 @@ const app = express();
 connectDatabase();
 app.use(cors());
 app.use(express.json());
-app.use(BiquadFilterNode);
+app.use(router);
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: "Internal server error" });

@@ -22,10 +22,14 @@ export const config = {
 export const connectDatabase = async () => {
   console.log("Wait connecting to the database");
   try {
+    const uri = config.mongoDBUri;
+    if (!uri) {
+      throw new Error("MONGODB_URI not found in environment variables");
+    }
   
     // Conecta ao banco de dados MongoDB utilizando a URL fornecida no arquivo de configuração
    
-    await mongoose.connect(config.mongoDBUri, {
+    await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
