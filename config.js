@@ -8,13 +8,13 @@ dotenv.config();
 
 export const config = {
   // Configurações de autenticação
-  jwtSecret: process.env.JWT_SECRET || "your-secret-key",
-  jwtExpiration: process.env.JWT_EXPIRATION || "1d",
-
-  // Configurações de segurança
-  bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10,
-
-  // Outras configurações técnicas
+  sign: jwt.sign,
+  verify: jwt.verify,
+  secret: process.env.JWT_SECRET || "your-secret-key",
+  expiration: process.env.JWT_EXPIRATION || "1d",
+  hash: bcrypt.hash,
+  compareSync: bcrypt.compareSync,
+  salt: parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10,
   port: process.env.PORT || 3001,
   mongoDBUri: process.env.MONGODB_URI || "mongodb://localhost:27017/mydatabase",
 };
@@ -39,5 +39,3 @@ export const connectDatabase = async () => {
     process.exit(1);
   }
 };
-
-export {jwt, bcrypt}

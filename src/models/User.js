@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { config, bcrypt } from "../../config.js";
+import { config } from "../../config.js";
 
 // Esquema para a coleção de usuários
 const UserSchema = new mongoose.Schema({
@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     require: true,
     unique: true,
+    lowercase: true,
   },
   password: {
     type: String,
@@ -35,7 +36,7 @@ const UserSchema = new mongoose.Schema({
 
 // Função executada antes de salvar um usuário no banco de dados
 UserSchema.pre("save", async function (next) {
-  this.password = await bcrypt.hash(this.password, config.bcryptSaltRounds);
+  this.password = await config.hash(this.password, config.salt);
   next();
 });
 
