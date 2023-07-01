@@ -1,5 +1,5 @@
-import { config, jwt } from "../../config.js";
-import userService from "../services/user.service.js";
+import {config} from "../../config.js";
+import {findByIdService} from "../services/user.service.js";
 
 // Middleware de autenticação
 export const authMiddleware = (req, res, next) => {
@@ -27,14 +27,14 @@ export const authMiddleware = (req, res, next) => {
       return res.status(401).send({ message: "Invalid authorization schema" });
     }
 
-    jwt.verify(token, config.jwtSecret, async (error, decoded) => {
+    config.verify(token, config.secret, async (error, decoded) => {
 
       // Verifica se o token é válido
       if (error) {
         return res.status(401).send({ message: "Invalid token" });
       }
 
-      const user = await userService.findByIdService(decoded.id);
+      const user = await findByIdService(decoded.id);
 
     // Verifica se o usuário associado ao token existe  
       if (!user || !user.id) {
