@@ -1,23 +1,28 @@
-import { bcrypt } from "../../config.js";
-import userRepository from "../Repository/user.Repository.js";
-import authService from "../services/auth.service.js";
-import { bcryptSaltRounds, bcrypt } from "../../config.js";
+import {
+  createRepository,
+  findAllRepository,
+  findByEmailRepository,
+  findByIdRepository,
+  updateRepository,
+} from "../repositories/user.repositories.js";
+import { config } from "../../config.js";
+import { generateToken } from "./auth.service.js";
 
 // Função para criar um novo usuário
-const createService = async (body) => {
+export const createService = async (body) => {
   const { name, username, email, password, avatar, background } = body;
 
   if (!name || !username || !email || !password || !avatar || !background)
     throw new Error("Submit all fields for registration");
 
-  const foundUser = await userRepository.findByEmailUser(data.email);
+  const foundUser = await findByEmailRepository(email);
   if (foundUser) throw new Error("User already exists");
 
-  const user = await userRepository.createRepository(body);
+  const user = await createRepository(body);
 
   if (!user) throw new Error("Error Creating User");
 
-  const token = authService.generateToken(user.id);
+  const token = generateToken(user.id);
 
   return {
     user: {
@@ -33,8 +38,8 @@ const createService = async (body) => {
 };
 
 // Função para obter todos os usuários
-const findAllService = async () => {
-  const users = await userRepository.findAllRepository();
+export const findAllService = async () => {
+  const users = await findAllRepository();
 
   if (users.length === 0) throw new Error("There are no registered users");
 
@@ -42,7 +47,7 @@ const findAllService = async () => {
 };
 
 // Função para obter um usuário pelo ID
-const findByIdService = async (userId, userIdLogged) => {
+export const findByIdService = async (userId, userIdLogged) => {
   let idParam;
   if (!userId) {
     userId = userIdLogged;
@@ -52,40 +57,39 @@ const findByIdService = async (userId, userIdLogged) => {
   }
   if (!idParam)
     throw new Error("Send an ID in the parameters to search for the user");
-  const user = await userRepository.findByIdRepository(idParam);
+  const user = await findByIdRepository(idParam);
 
   return user;
 };
 
 // Função para atualizar um usuário
-const updateUserService = async (body, userId) => {
+export const updateService = async (body, userId, userIdLogged) => {
   const { name, username, email, password, avatar, background } = body;
+  
   if (!name && !username && !email && !password && !avatar && !background)
     throw new Error("Submit at least one field for update");
 
-  const user = await userRepository.findByIdRepository(id);
+  const user = await findByIdRepository(userId);
 
-  if (user._id != userId)
+  if (user._id != userIdLogged)
     throw new Error(
-      "Submit at least one field for updateYou cannot update this user"
+      "You cannot update this user"
     );
+    
 
   if (password) {
-    password = await bcrypt.hash(password, bcryptSaltRounds);
+    password = await config.hash(password, config.salt);
   }
 
-  await userRepository.updateRepository(
+  await updateRepository(
     userId,
-    body
-  );
+    name,
+    username,
+    email,
+    password,
+    avatar,
+    background);
 
   // Retorna a resposta de sucesso
   return { message: "User successfully updated" };
-};
-
-export default {
-  createService,
-  findAllService,
-  findByIdService,
-  updateUserService,
 };

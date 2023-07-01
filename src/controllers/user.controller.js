@@ -1,11 +1,11 @@
-import userService from "../services/user.service.js";
+import { createService, findAllService, findByIdService, updateService } from "../services/user.service.js";
 
 // Função para criar um novo usuário
-const create = async (req, res) => {
+export const createUser = async (req, res) => {
   const body = req.body;
 
   try {
-    const user = await userService.createService(body);
+    const user = await createService(body);
 
     return res.status(201).send(user);
   } catch (e) {
@@ -14,9 +14,9 @@ const create = async (req, res) => {
 };
 
 // Função para obter todos os usuários
-const findAll = async (req, res) => {
+export const findAllUser = async (req, res) => {
   try {
-    const users = await userService.findAllService();
+    const users = await findAllService();
     return res.send(users);
   } catch (e) {
     res.status(500).send(e.message);
@@ -24,12 +24,12 @@ const findAll = async (req, res) => {
 };
 
 // Função para obter um usuário pelo ID
-const findById = async (req, res) => {
+export const findByIdUser= async (req, res) => {
   const { id: userId } = req.params;
   const userIdLogged = req.userId;
 
   try {
-    const user = await userRepository.findByIdRepository(userId, userIdLogged);
+    const user = await findByIdService(userId, userIdLogged);
 
     return res.send(user);
   } catch (e) {
@@ -38,12 +38,16 @@ const findById = async (req, res) => {
 };
 
 // Função para atualizar um usuário
-const updateUser = async (req, res) => {
- const body = req.body
- const userId = req.userId
-
+export const updateUser = async (req, res) => {
   try {
-    const response = await userService.updateService(body, userId);
+    const { name, username, email, password, avatar, background } = req.body;
+    const { id: userId } = req.params;
+    const userIdLogged = req.userId;
+
+  
+    const response = await updateService({ name, username, email, password, avatar, background },
+      userId,
+      userIdLogged);
 
     // Retorna a resposta de sucesso
     return res.send(response);
@@ -53,9 +57,4 @@ const updateUser = async (req, res) => {
   }
 };
 
-export default {
-  create,
-  findAll,
-  findById,
-  updateUser,
-};
+

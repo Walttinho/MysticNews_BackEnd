@@ -1,20 +1,24 @@
-import {Router} from "express";
-import userController from "../controllers/user.controller.js";
-import { validId, validUser } from "../middlewares/global.middleware.js";
+import { Router } from "express";
+import {
+  createUser,
+  findAllUser,
+  findByIdUser,
+  updateUser,
+} from "../controllers/user.controller.js";
+import { validId} from "../middlewares/global.middleware.js";
 
 const userRouter = Router();
 
 // Rota para criar um novo usuário
-userRouter.post("/create", userController.create);
+userRouter.post("/create", createUser);
 
 // Rota para obter todos os usuários
-userRouter.get("/", userController.findAll);
+userRouter.get("/", findAllUser);
 
 // Rota para obter um usuário pelo ID
-userRouter.get("/:id", validId, validUser, userController.findById);
+userRouter.get("/:id", validId,  findByIdUser);
 
 // Rota para obter um usuário pelo ID
-userRouter.patch("/:id", validId, validUser, userController.updateUser);
+userRouter.patch("/:id", validId, updateUser);
 
 export default userRouter;
-
