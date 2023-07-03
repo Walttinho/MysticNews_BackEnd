@@ -1,75 +1,197 @@
-import News from "../models/News.js";
+import { notFoundError, unauthorizedError } from "../error/error.js";
+import {
+  createRepository,
+  findAllRepository,
+  countNewsRepository,
+  topNewsRepository,
+  findByIdRepository,
+  searchByTitleRepository,
+  findByUserRepository,
+  updateNewsRepository,
+  delNewsRepository,
+  newsLikedRepository,
+  delLikedNewsRepository,
+  addCommentNewsRepository,
+  delCommentNewsRepository,
+} from "../repositories/news.repositories.js";
 
-// Serviço para criar as notícias
-export const createService = (body) => News.create(body);
-
-// Serviço para obter todas as notícias
-export const findAllService = (offset, limit) =>
-  News.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("user");
-
-// Serviço para contar o número de notícias  
-export const countNewsService = () => News.countDocuments();
-
-// Serviço para obter a notícia mais recente
-export const topNewsService = () =>
-  News.findOne().sort({ _id: -1 }).populate("user");
-
-// Serviço para obter uma notícia pelo ID  
-export const findByIdService = (id) => News.findById(id).populate("user");
-
-// Serviço para pesquisar notícias por título
-export const searchByTitleService = (title) =>
-  News.find({
-    title: { $regex: `${title || ""}`, $options: "i" },
-  })
-    .sort({ _id: -1 })
-    .populate("user");
-
-    // Serviço para obter notícias de um usuário específico
-export const byUserService = (id) =>
-  News.find({ user: id }).sort({ _id: -1 }).populate("user");
-
-// Serviço para atualizar uma notícia
-  export const updateNewsService = (id, title, text, banner) =>
-  News.findOneAndUpdate(
-    { _id: id },
-    { title, text, banner },
-    { rawResult: true }
-  );
-
-// Serviço para deletar uma notícia
-  export const deleteNewsService = (id) => News.findOneAndDelete({ _id: id });
-
-// Serviço para adicionar um like a uma notícia
-export const newsLikedService = (idNews, userId) =>
-  News.findOneAndUpdate(
-    { _id: idNews, "likes.userId": { $nin: [userId] } },
-    { $push: { likes: { userId, created: new Date() } } }
-  );
-
-// Serviço para remover um like de uma notícia
-  export const deleteNewsLikedService = (idNews, userId) =>
-  News.findOneAndUpdate({ _id: idNews }, { $pull: { likes: { userId } } });
-
-// Serviço para adicionar um comentário a uma notícia
-export const addCommentNewsService = (idNews, comment, userId) => {
-  const idComment = Math.floor(Date.now() * Math.random()).toString(36);
-
-  return News.findOneAndUpdate(
-    { _id: idNews },
+export const createNewsService = async (title, banner, text, userId) => {
+  const news = await createRepository(
     {
-      $push: {
-        comments: { idComment, userId, comment, createdAt: new Date() },
-      },
-    }
+      title,
+      banner,
+      text,
+    },
+    userId
   );
+  return news;
 };
 
+export const findAllService = async (limit, offset, currentUrl) => {
+  if (!limit) {
+    limit = 5;
+  }
+  if (!offset) {
+    offset = 0;
+  }
 
-// Serviço para remover um comentário de uma notícia
-  export const delCommentNewsService = (idNews, idComment, userId) =>
-  News.findOneAndUpdate(
-    { _id: idNews },
-    { $pull: { comments: { idComment, userId } } }
+  const news = await findAllRepository(offset, limit);
+  const totalNews = await countNewsRepository();
+
+  const next = offset + limit;
+  const nextUrl =
+    next < totalNews ? `${currentUrl}?limit=${limit}&offset=${next}` : null;
+
+  const previous = offset - limit < 0 ? null : offset - limit;
+  const previousUrl =
+    previous != null ? `${currentUrl}?limit=${limit}&offset=${previous}` : null;
+
+  news.shift(); //remove o primeiro item da lista
+  res.send({
+    nextUrl,
+    previousUrl,
+    limit,
+    offset,
+    totalNews,
+
+    results: news.map((item) => ({
+      id: item._id,
+      title: item.title,
+      text: item.text,
+      banner: item.banner,
+      likes: item.likes,
+      comments: item.comments,
+      name: item.user.name,
+      username: item.user.username,
+      userAvatar: item.user.avatar,
+    })),
+  });
+};
+
+export const topNewsService = async () => {
+  const news = await topNewsRepository();
+
+  if (!news) throw notFoundError();
+
+  return {
+    news: {
+      id: news._id,
+      title: news.title,
+      text: news.text,
+      banner: news.banner,
+      likes: news.likes,
+      comments: news.comments,
+      name: news.user.name,
+      username: news.user.username,
+      userAvatar: news.user.avatar,
+    },
+  };
+};
+
+export const searchNewsService = async (title) => {
+  const foundNews = await searchByTitleRepository(title);
+
+  return {
+    results: foundNews.map((news) => ({
+      id: news._id,
+      title: news.title,
+      banner: news.banner,
+      text: news.text,
+      likes: news.likes,
+      comments: news.comments,
+      name: news.user.name,
+      username: news.user.username,
+      avatar: news.user.avatar,
+    })),
+  };
+};
+
+export const findByUserService = async (userId) => {
+  const news = await findByUserRepository(userId);
+
+  return {
+    results: news.map((item) => ({
+      id: item._id,
+      title: item.title,
+      text: item.text,
+      banner: item.banner,
+      likes: item.likes,
+      comments: item.comments,
+      name: item.user.name,
+      username: item.user.username,
+      userAvatar: item.user.avatar,
+    })),
+  };
+};
+
+export const findByIdService = async (id) => {
+  const news = await findByIdRepository(id);
+  if (!news) throw notFoundError();
+
+  return {
+    results: news.map((item) => ({
+      id: item._id,
+      title: item.title,
+      text: item.text,
+      banner: item.banner,
+      likes: item.likes,
+      comments: item.comments,
+      name: item.user.name,
+      username: item.user.username,
+      userAvatar: item.user.avatar,
+    })),
+  };
+};
+
+export const updateNewsService = async (
+  title,
+  banner,
+  text,
+  userId,
+  idNews
+) => {
+  const news = await findByIdService(idNews);
+
+  if (news.user.id != new ObjectId(userId)) throw unauthorizedError();
+
+  const newsUpdated = await updateNewsRepository(idNews, title, text, banner);
+  return newsUpdated;
+};
+
+export const delNewsService = async (idNews, userId) => {
+  const news = await findByIdRepository(idNews);
+  if (!news) throw notFoundError();
+
+  if (news.user.id != userId) throw unauthorizedError();
+
+  await delNewsRepository(idNews);
+};
+
+export const likedNewsService = async (idNews, userId) => {
+  const newsLiked = await newsLikedRepository(idNews, userId);
+
+  if (newsLiked.ok) {
+    await delLikedNewsRepository(idNews, userId);
+    return { message: "Like successfully removed" };
+  }
+
+  return { message: "Like done successfully" };
+};
+
+export const addCommentNewsService = async (idNews, userId, comment) => {
+  await addCommentNewsRepository(idNews, comment, userId);
+
+  return { message: "Comment added successfully" };
+};
+
+export const delCommentNewsService = async (idNews, userId, idComment) => {
+  const commentDeleted = await delCommentNewsRepository(
+    idNews,
+    idComment,
+    userId
   );
-  
+
+  return {
+    message: "Comment successfully removed!",
+  };
+};
