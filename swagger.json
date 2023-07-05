@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
+      "url": "http://localhost:3001",
       "description": "Local Server"
     },
     {
@@ -212,23 +212,7 @@
         }
       }
     },
-    "/auth/logout": {
-      "post": {
-        "summary": "Logout to Breaking News",
-        "description": "Route responsible for loggout in a registered user",
-        "tags": ["Auth"],
-        "security": [{ "bearerAuth": [] }],
-        "responses": {
-          "400": {
-            "description": "Logout error"
-          },
-          "200": {
-            "description": "Logout Successfully"
-          }
-        }
-      }
-    },
-    "/news/create": {
+        "/news/create": {
       "post": {
         "summary": "Create a new news",
         "description": "Route responsible for creating a new News",
@@ -276,7 +260,7 @@
         }
       }
     },
-    "/news": {
+    "/news/": {
       "get": {
         "summary": "Search all posts",
         "description": "Route responsible for fetching all posts",
