@@ -1,4 +1,9 @@
-import { createService, findAllService, findByIdService, updateService } from "../services/user.service.js";
+import {
+  createService,
+  findAllService,
+  findByIdService,
+  updateService,
+} from "../services/user.service.js";
 
 // Função para criar um novo usuário
 export const createUser = async (req, res) => {
@@ -24,13 +29,12 @@ export const findAllUser = async (req, res) => {
 };
 
 // Função para obter um usuário pelo ID
-export const findByIdUser= async (req, res) => {
+export const findByIdUser = async (req, res) => {
   const { id: userId } = req.params;
   const userIdLogged = req.userId;
 
   try {
     const user = await findByIdService(userId, userIdLogged);
-
     return res.send(user);
   } catch (e) {
     res.status(500).send(e.message);
@@ -39,22 +43,14 @@ export const findByIdUser= async (req, res) => {
 
 // Função para atualizar um usuário
 export const updateUser = async (req, res) => {
+  const body = req.body;
+  const userId = req.userId;
   try {
-    const { name, username, email, password, avatar, background } = req.body;
-    const { id: userId } = req.params;
-    const userIdLogged = req.userId;
-
-  
-    const response = await updateService({ name, username, email, password, avatar, background },
-      userId,
-      userIdLogged);
+    const response = await updateService(body, userId);
 
     // Retorna a resposta de sucesso
     return res.send(response);
   } catch (e) {
-   
     res.status(500).send(e.message);
   }
 };
-
-

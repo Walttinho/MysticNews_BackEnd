@@ -10,27 +10,18 @@ export const createRepository = (body) => User.create(body);
 export const findAllRepository = () => User.find();
 
 // Serviço para obter um usuário pelo ID
-export const findByIdRepository = (id) => User.findById(id);
+export const findByIdRepository = (idParam) => User.findById(idParam);
 
 // Serviço para Atualizar um usuário
-export const updateRepository = (id,
-  name,
-  username,
-  email,
-  password,
-  avatar,
-  background) =>
-  User.findOneAndUpdate({
-    _id: id,
-  },
-  {
-    name,
-    username,
-    email,
-    password,
-    avatar,
-    background,
-  },
-  {
-    rawResult: true,
-  });
+export const updateRepository = (id, body) =>
+  User.findOneAndUpdate(
+    {
+      _id: id,
+    },
+
+    body,
+
+    {
+      rawResult: true,
+    }
+  );

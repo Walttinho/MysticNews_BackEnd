@@ -63,32 +63,22 @@ export const findByIdService = async (userId, userIdLogged) => {
 };
 
 // Função para atualizar um usuário
-export const updateService = async (body, userId, userIdLogged) => {
+export const updateService = async (body, userId) => {
   const { name, username, email, password, avatar, background } = body;
-  
+
   if (!name && !username && !email && !password && !avatar && !background)
     throw new Error("Submit at least one field for update");
 
   const user = await findByIdRepository(userId);
-
-  if (user._id != userIdLogged)
-    throw new Error(
-      "You cannot update this user"
-    );
-    
+  console.log(user._id,user.id, userId);
+  console.log(!user._id.equals(userId));
+  if (!user._id.equals(userId)) throw new Error("You cannot update this user");
 
   if (password) {
     password = await config.hash(password, config.salt);
   }
 
-  await updateRepository(
-    userId,
-    name,
-    username,
-    email,
-    password,
-    avatar,
-    background);
+  await updateRepository(userId, body);
 
   // Retorna a resposta de sucesso
   return { message: "User successfully updated" };

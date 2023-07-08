@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-
-// Middleware para validar o ID
 export function validId(req, res, next) {
   let idParam;
   if (!req.params.id) {
@@ -16,5 +14,3 @@ export function validId(req, res, next) {
   }
   next();
 }
-
-

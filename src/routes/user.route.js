@@ -6,14 +6,16 @@ import {
   updateUser,
 } from "../controllers/user.controller.js";
 import { validId} from "../middlewares/global.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const userRouter = Router();
 
 userRouter.post("/create", createUser);
+
+userRouter.use(authMiddleware) 
 userRouter.get("/", findAllUser);
 
-userRouter.use(validId)
-userRouter.get("/:id", findByIdUser);
-userRouter.patch("/:id", updateUser);
+userRouter.get("/:id",validId, findByIdUser);
+userRouter.patch("/:id",validId, updateUser);
 
 export default userRouter;
