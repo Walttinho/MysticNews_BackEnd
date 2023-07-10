@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import {config} from "../../config.js";
+import { config } from "../../config.js";
 
 // Serviço para fazer o login
 export const loginService = async (email, password) => {
@@ -16,7 +16,7 @@ export const loginService = async (email, password) => {
 export const generateToken = (id) => {
   try {
     const token = config.sign({ id: id }, config.secret, {
-      expiresIn: config.expiration,
+      expiresIn: 86400,
     });
     return token;
   } catch (error) {
@@ -24,4 +24,3 @@ export const generateToken = (id) => {
     throw new Error("Token generation error");
   }
 };
-

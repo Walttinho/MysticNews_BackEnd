@@ -70,8 +70,7 @@ export const updateService = async (body, userId) => {
     throw new Error("Submit at least one field for update");
 
   const user = await findByIdRepository(userId);
-  console.log(user._id,user.id, userId);
-  console.log(!user._id.equals(userId));
+
   if (!user._id.equals(userId)) throw new Error("You cannot update this user");
 
   if (password) {
