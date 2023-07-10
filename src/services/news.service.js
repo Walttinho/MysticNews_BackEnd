@@ -128,6 +128,7 @@ export const findByUserService = async (id) => {
 
 export const findByIdService = async (id) => {
   const news = await findByIdRepository(id);
+  console.log(id, news)
   if (!news) throw notFoundError();
 
   return {

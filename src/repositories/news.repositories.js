@@ -11,8 +11,9 @@ export const countNewsRepository = () => News.countDocuments();
 export const topNewsRepository = () =>
   News.findOne().sort({ _id: -1 }).populate("user");
 
-export const findByIdRepository = (id) => { News.findById(id).populate("user");
-};
+  export const findByIdRepository = (id) => {
+    return News.findById(id).populate("user");
+  };
 
 export const searchByTitleRepository = (title) =>
   News.find({
