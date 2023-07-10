@@ -1,26 +1,22 @@
-import User from "../models/User.js";
 import { config } from "../../config.js";
+import { loginRepository } from "../repositories/auth.repositories.js";
 
-// Serviço para fazer o login
-export const loginService = async (email, password) => {
-  try {
-    const user = await User.findOne({ email: email }).select("+password");
-    return user;
-  } catch (error) {
-    console.error("Login error:", error);
-    throw new Error("Login error");
-  }
+export const generateToken = (id) => {
+  const token = config.sign({ id: id }, config.secret, {
+    expiresIn: 86400,
+  });
+  return token;
 };
 
-// Serviço para gerar o token de autenticação
-export const generateToken = (id) => {
-  try {
-    const token = config.sign({ id: id }, config.secret, {
-      expiresIn: 86400,
-    });
-    return token;
-  } catch (error) {
-    console.error("Token generation error:", error);
-    throw new Error("Token generation error");
-  }
+export const loginService = async (email, password) => {
+  const user = await loginRepository(email);
+  if (!user) throw new Error("Wrong password or username");
+
+  const isPasswordValid = config.compareSync(password, user.password);
+
+  if (!isPasswordValid) throw new Error("Invalid password");
+
+  const token = generateToken(user.id);
+
+  return token;
 };
