@@ -1,24 +1,22 @@
 import {
-  createService,
+  createNewsService,
   findAllService,
-  countNewsService,
   topNewsService,
   findByIdService,
-  searchByTitleService,
-  byUserService,
+  searchNewsService,
+  findByUserService,
   updateNewsService,
-  deleteNewsService,
-  newsLikedService,
+  delNewsService,
+  likedNewsService,
   addCommentNewsService,
   delCommentNewsService,
 } from "../services/news.service.js";
 
 export const create = async (req, res) => {
+  const { title, text, banner } = req.body;
+  const userId = req.userId;
   try {
-    const { title, text, banner } = req.body;
-    const userId = req.userId;
-
-    const createdNews = await createService(
+    const createdNews = await createNewsService(
       {
         title,
         banner,
@@ -38,11 +36,10 @@ export const create = async (req, res) => {
 };
 
 export const findAll = async (req, res) => {
+  let { limit, offset } = req.query;
+  const currentUrl = req.baseUrl;
   try {
-    let { limit, offset } = req.query;
-    const currentUrl = req.baseUrl;
-
-    const news = await findAllService(offset, limit, currentUrl);
+    const news = await findAllService(limit, offset, currentUrl);
 
     return res.send(news);
   } catch (error) {
@@ -77,7 +74,7 @@ export const findById = async (req, res) => {
 export const searchByTitle = async (req, res) => {
   const { title } = req.query;
   try {
-    const news = await searchByTitleService(title);
+    const news = await searchNewsService(title);
     return res.send(news);
   } catch (error) {
     console.error("Error searching news:", error);
@@ -88,7 +85,7 @@ export const searchByTitle = async (req, res) => {
 export const byUser = async (req, res) => {
   const userId = req.userId;
   try {
-    const news = await byUserService(userId);
+    const news = await findByUserService(userId);
 
     return res.send(news);
   } catch (error) {
@@ -98,13 +95,12 @@ export const byUser = async (req, res) => {
 };
 
 export const updateNews = async (req, res) => {
+  const { title, text, banner } = req.body;
+  const { id } = req.params;
+  const userId = req.userId;
   try {
-    const { title, text, banner } = req.body;
-    const { idNews } = req.params;
-    const userId = req.userId;
-
-    const news = await updateNewsService(idNews, userId, title, text, banner);
-    return res.send(news);
+     await updateNewsService(id, userId, title, text, banner);
+    return res.send({ message: "News successfully updated!" });
   } catch (error) {
     // Captura e trata qualquer erro
     console.error("Error updating news:", error);
@@ -113,10 +109,10 @@ export const updateNews = async (req, res) => {
 };
 
 export const deleteNews = async (req, res) => {
-  const { idNews } = req.params;
+  const { id } = req.params;
   const userId = res.userId;
   try {
-    await deleteNewsService(idNews, userId);
+    await delNewsService(id, userId);
     return res.send({ message: "News successfully deleted" });
   } catch (error) {
     console.error("Error deleting news:", error);
@@ -125,10 +121,10 @@ export const deleteNews = async (req, res) => {
 };
 
 export const likeNews = async (req, res) => {
-  const { idNews } = req.params;
+  const { id } = req.params;
   const userId = req.userId;
   try {
-    const message = await newsLikedService(idNews, userId);
+    const message = await likedNewsService(id, userId);
 
     return res.send(message);
   } catch (error) {
@@ -139,13 +135,15 @@ export const likeNews = async (req, res) => {
 };
 
 export const addCommentNews = async (req, res) => {
-  const {idNews } = req.params;
+  const {id: idNews } = req.params;
   const userId = req.userId;
   const { comment } = req.body;
   try {
-    const message = await addCommentNewsService(idNews, comment, userId);
+    await addCommentNewsService(idNews, comment, userId);
 
-    return res.send(message);
+    return res.send({
+      message: "Comment successfully completed!",
+    });
   } catch (error) {
     console.error("Error adding comment:", error);
     res.status(500).send({ message: "Error adding comment" });
@@ -154,16 +152,16 @@ export const addCommentNews = async (req, res) => {
 
 export const delCommentNews = async (req, res) => {
   try {
-    const { idNews, idComment } = req.params;
+    const { id: idNews, idComment } = req.params;
     const userId = req.userId;
 
-    const commentDeleted = await delCommentNewsService(
+  await delCommentNewsService(
       idNews,
       idComment,
       userId
     );
 
-    res.send(commentDeleted);
+    res.send({ message: "Comment successfully removed" });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }

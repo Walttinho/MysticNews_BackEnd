@@ -15,22 +15,22 @@ import {
   delCommentNewsRepository,
 } from "../repositories/news.repositories.js";
 
-export const createNewsService = async (title, banner, text, userId) => {
-  const news = await createRepository(
-    {
-      title,
-      banner,
-      text,
-    },
-    userId
-  );
+export const createNewsService = async ({ title, banner, text }, userId) => {
+  if (!title || !banner || !text)
+    throw new Error("Submit all fields for registration");
+
+  const news = await createRepository({ title, banner, text }, userId);
   return news;
 };
 
 export const findAllService = async (limit, offset, currentUrl) => {
+  limit = Number(limit);
+  offset = Number(offset);
+
   if (!limit) {
     limit = 5;
   }
+
   if (!offset) {
     offset = 0;
   }
@@ -46,26 +46,26 @@ export const findAllService = async (limit, offset, currentUrl) => {
   const previousUrl =
     previous != null ? `${currentUrl}?limit=${limit}&offset=${previous}` : null;
 
-  news.shift(); //remove o primeiro item da lista
-  res.send({
+  news.shift();
+  return {
     nextUrl,
     previousUrl,
     limit,
     offset,
     totalNews,
 
-    results: news.map((item) => ({
-      id: item._id,
-      title: item.title,
-      text: item.text,
-      banner: item.banner,
-      likes: item.likes,
-      comments: item.comments,
-      name: item.user.name,
-      username: item.user.username,
-      userAvatar: item.user.avatar,
+    results: news.map((news) => ({
+      id: news._id,
+      title: news.title,
+      text: news.text,
+      banner: news.banner,
+      likes: news.likes,
+      comments: news.comments,
+      name: news.user?.name,
+      username: news.user?.username,
+      userAvatar: news.user?.avatar,
     })),
-  });
+  };
 };
 
 export const topNewsService = async () => {
@@ -90,36 +90,38 @@ export const topNewsService = async () => {
 
 export const searchNewsService = async (title) => {
   const foundNews = await searchByTitleRepository(title);
+  if (foundNews.length === 0)
+    throw new Error("There are no news with this title");
 
   return {
     results: foundNews.map((news) => ({
       id: news._id,
       title: news.title,
-      banner: news.banner,
       text: news.text,
+      banner: news.banner,
       likes: news.likes,
       comments: news.comments,
-      name: news.user.name,
-      username: news.user.username,
-      avatar: news.user.avatar,
+      name: news.user?.name,
+      username: news.user?.username,
+      userAvatar: news.user?.avatar,
     })),
   };
 };
 
-export const findByUserService = async (userId) => {
-  const news = await findByUserRepository(userId);
+export const findByUserService = async (id) => {
+  const news = await findByUserRepository(id);
 
   return {
-    results: news.map((item) => ({
-      id: item._id,
-      title: item.title,
-      text: item.text,
-      banner: item.banner,
-      likes: item.likes,
-      comments: item.comments,
-      name: item.user.name,
-      username: item.user.username,
-      userAvatar: item.user.avatar,
+    results: news.map((news) => ({
+      id: news._id,
+      title: news.title,
+      text: news.text,
+      banner: news.banner,
+      likes: news.likes,
+      comments: news.comments,
+      name: news.user?.name,
+      username: news.user?.username,
+      userAvatar: news.user?.avatar,
     })),
   };
 };
@@ -129,49 +131,43 @@ export const findByIdService = async (id) => {
   if (!news) throw notFoundError();
 
   return {
-    results: news.map((item) => ({
-      id: item._id,
-      title: item.title,
-      text: item.text,
-      banner: item.banner,
-      likes: item.likes,
-      comments: item.comments,
-      name: item.user.name,
-      username: item.user.username,
-      userAvatar: item.user.avatar,
-    })),
+    id: news._id,
+    title: news.title,
+    text: news.text,
+    banner: news.banner,
+    likes: news.likes,
+    comments: news.comments,
+    name: news.user?.name,
+    username: news.user?.username,
+    userAvatar: news.user?.avatar,
   };
 };
 
-export const updateNewsService = async (
-  title,
-  banner,
-  text,
-  userId,
-  idNews
-) => {
-  const news = await findByIdService(idNews);
+export const updateNewsService = async (id, title, banner, text, userId) => {
+  if (!title && !banner && !text)
+    throw new Error("Submit at least one field to update the news");
 
-  if (news.user.id != new ObjectId(userId)) throw unauthorizedError();
+  const news = await findByIdService(id);
 
-  const newsUpdated = await updateNewsRepository(idNews, title, text, banner);
-  return newsUpdated;
+  if (news.user._id != userId) throw unauthorizedError();
+
+  await updateNewsRepository(id, title, text, banner);
 };
 
-export const delNewsService = async (idNews, userId) => {
-  const news = await findByIdRepository(idNews);
+export const delNewsService = async (id, userId) => {
+  const news = await findByIdRepository(id);
   if (!news) throw notFoundError();
 
   if (news.user.id != userId) throw unauthorizedError();
 
-  await delNewsRepository(idNews);
+  await delNewsRepository(id);
 };
 
-export const likedNewsService = async (idNews, userId) => {
-  const newsLiked = await newsLikedRepository(idNews, userId);
+export const likedNewsService = async (id, userId) => {
+  const newsLiked = await newsLikedRepository(id, userId);
 
-  if (newsLiked.ok) {
-    await delLikedNewsRepository(idNews, userId);
+  if (newsLiked.lastErrorObject.n === 0) {
+    await delLikedNewsRepository(id, userId);
     return { message: "Like successfully removed" };
   }
 
@@ -179,17 +175,19 @@ export const likedNewsService = async (idNews, userId) => {
 };
 
 export const addCommentNewsService = async (idNews, userId, comment) => {
+  if (!comment) throw new Error("Write a message to comment");
+  const news = await findByIdRepository(idNews);
+  if (!news) throw notFoundError();
+
   await addCommentNewsRepository(idNews, comment, userId);
 
   return { message: "Comment added successfully" };
 };
 
 export const delCommentNewsService = async (idNews, userId, idComment) => {
-  const commentDeleted = await delCommentNewsRepository(
-    idNews,
-    idComment,
-    userId
-  );
+  const news = await findByIdRepository(idNews);
+  if (!news) throw notFoundError();
+  await delCommentNewsRepository(idNews, idComment, userId);
 
   return {
     message: "Comment successfully removed!",

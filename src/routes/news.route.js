@@ -12,6 +12,7 @@ import {
   delCommentNews,
 } from "../controllers/news.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { validId } from "../middlewares/global.middleware.js";
 import { Router } from "express";
 
 const newsRouter = Router();
@@ -22,6 +23,8 @@ newsRouter.get("/search", searchByTitle);
 
 newsRouter.use(authMiddleware);
 newsRouter.post("/create", create);
+
+newsRouter.use(validId);
 newsRouter.get("/byUser", byUser);
 newsRouter.get("/findById/:id", findById);
 newsRouter.patch("/:id", updateNews);
