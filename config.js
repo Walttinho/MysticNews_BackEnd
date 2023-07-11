@@ -11,7 +11,7 @@ export const config = {
   sign: jwt.sign,
   verify: jwt.verify,
   secret: process.env.JWT_SECRET || "your-secret-key",
-  expiration: process.env.JWT_EXPIRATION || "1d",
+  expiration: parseInt(process.env.JWT_EXPIRATION) || "1d",
   hash: bcrypt.hash,
   compareSync: bcrypt.compareSync,
   salt: parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10,
