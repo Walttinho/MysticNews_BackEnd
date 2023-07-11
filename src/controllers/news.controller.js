@@ -43,7 +43,6 @@ export const findAll = async (req, res) => {
 
     return res.send(news);
   } catch (error) {
-    // Captura e trata qualquer erro
     console.error("Error finding news:", error);
     res.status(500).send({ message: "Error finding news" });
   }
@@ -98,11 +97,11 @@ export const updateNews = async (req, res) => {
   const { title, text, banner } = req.body;
   const { id } = req.params;
   const userId = req.userId;
+
   try {
-     await updateNewsService(id, userId, title, text, banner);
+    await updateNewsService(id, userId, title, text, banner);
     return res.send({ message: "News successfully updated!" });
   } catch (error) {
-    // Captura e trata qualquer erro
     console.error("Error updating news:", error);
     res.status(500).send({ message: "Error updating news" });
   }
@@ -110,7 +109,7 @@ export const updateNews = async (req, res) => {
 
 export const deleteNews = async (req, res) => {
   const { id } = req.params;
-  const userId = res.userId;
+  const userId = req.userId;
   try {
     await delNewsService(id, userId);
     return res.send({ message: "News successfully deleted" });
@@ -128,14 +127,13 @@ export const likeNews = async (req, res) => {
 
     return res.send(message);
   } catch (error) {
-    // Captura e trata qualquer erro
     console.error("Error liking news:", error);
     res.status(500).send({ message: "Error liking news" });
   }
 };
 
 export const addCommentNews = async (req, res) => {
-  const {id: idNews } = req.params;
+  const { id: idNews } = req.params;
   const userId = req.userId;
   const { comment } = req.body;
   try {
@@ -152,14 +150,10 @@ export const addCommentNews = async (req, res) => {
 
 export const delCommentNews = async (req, res) => {
   try {
-    const { id: idNews, idComment } = req.params;
+    const { idNews, idComment } = req.params;
     const userId = req.userId;
 
-  await delCommentNewsService(
-      idNews,
-      idComment,
-      userId
-    );
+    await delCommentNewsService(idNews, idComment, userId);
 
     res.send({ message: "Comment successfully removed" });
   } catch (err) {

@@ -46,7 +46,6 @@ export const findAllService = async (limit, offset, currentUrl) => {
   const previousUrl =
     previous != null ? `${currentUrl}?limit=${limit}&offset=${previous}` : null;
 
-  
   return {
     nextUrl,
     previousUrl,
@@ -128,7 +127,6 @@ export const findByUserService = async (id) => {
 
 export const findByIdService = async (id) => {
   const news = await findByIdRepository(id);
-  console.log(id, news)
   if (!news) throw notFoundError();
 
   return {
@@ -144,22 +142,24 @@ export const findByIdService = async (id) => {
   };
 };
 
-export const updateNewsService = async (id, title, banner, text, userId) => {
+export const updateNewsService = async (id, userId, title, text, banner) => {
   if (!title && !banner && !text)
     throw new Error("Submit at least one field to update the news");
 
-  const news = await findByIdService(id);
+  const news = await findByIdRepository(id);
 
-  if (news.user._id != userId) throw unauthorizedError();
+  if (!news) throw new Error("News not found");
+  if (!news.user._id.equals(userId))
+    throw new Error("You didn't create this News");
 
   await updateNewsRepository(id, title, text, banner);
 };
 
 export const delNewsService = async (id, userId) => {
   const news = await findByIdRepository(id);
-  if (!news) throw notFoundError();
-
-  if (news.user.id != userId) throw unauthorizedError();
+  if (!news) throw new Error("News not found");
+  if (!news.user._id.equals(userId))
+    throw new Error("You didn't create this News");
 
   await delNewsRepository(id);
 };
@@ -175,7 +175,7 @@ export const likedNewsService = async (id, userId) => {
   return { message: "Like done successfully" };
 };
 
-export const addCommentNewsService = async (idNews, userId, comment) => {
+export const addCommentNewsService = async (idNews, comment, userId) => {
   if (!comment) throw new Error("Write a message to comment");
   const news = await findByIdRepository(idNews);
   if (!news) throw notFoundError();
@@ -185,7 +185,7 @@ export const addCommentNewsService = async (idNews, userId, comment) => {
   return { message: "Comment added successfully" };
 };
 
-export const delCommentNewsService = async (idNews, userId, idComment) => {
+export const delCommentNewsService = async (idNews, idComment, userId) => {
   const news = await findByIdRepository(idNews);
   if (!news) throw notFoundError();
   await delCommentNewsRepository(idNews, idComment, userId);

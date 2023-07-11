@@ -5,7 +5,6 @@ import {
   updateService,
 } from "../services/user.service.js";
 
-// Função para criar um novo usuário
 export const createUser = async (req, res) => {
   const body = req.body;
 
@@ -18,7 +17,6 @@ export const createUser = async (req, res) => {
   }
 };
 
-// Função para obter todos os usuários
 export const findAllUser = async (req, res) => {
   try {
     const users = await findAllService();
@@ -28,7 +26,6 @@ export const findAllUser = async (req, res) => {
   }
 };
 
-// Função para obter um usuário pelo ID
 export const findByIdUser = async (req, res) => {
   const { id: userId } = req.params;
   const userIdLogged = req.userId;
@@ -41,14 +38,11 @@ export const findByIdUser = async (req, res) => {
   }
 };
 
-// Função para atualizar um usuário
 export const updateUser = async (req, res) => {
   const body = req.body;
   const userId = req.userId;
   try {
     const response = await updateService(body, userId);
-
-    // Retorna a resposta de sucesso
     return res.send(response);
   } catch (e) {
     res.status(500).send(e.message);

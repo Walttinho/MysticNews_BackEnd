@@ -3,7 +3,7 @@ import { loginRepository } from "../repositories/auth.repositories.js";
 
 export const generateToken = (id) => {
   const token = config.sign({ id: id }, config.secret, {
-    expiresIn: 86400,
+    expiresIn: config.expiration,
   });
   return token;
 };

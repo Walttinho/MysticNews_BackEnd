@@ -8,7 +8,7 @@ import {
 import { config } from "../../config.js";
 import { generateToken } from "./auth.service.js";
 
-// Função para criar um novo usuário
+
 export const createService = async (body) => {
   const { name, username, email, password, avatar, background } = body;
 
@@ -37,7 +37,7 @@ export const createService = async (body) => {
   };
 };
 
-// Função para obter todos os usuários
+
 export const findAllService = async () => {
   const users = await findAllRepository();
 
@@ -46,7 +46,7 @@ export const findAllService = async () => {
   return users;
 };
 
-// Função para obter um usuário pelo ID
+
 export const findByIdService = async (userId, userIdLogged) => {
   let idParam;
   if (!userId) {
@@ -62,7 +62,7 @@ export const findByIdService = async (userId, userIdLogged) => {
   return user;
 };
 
-// Função para atualizar um usuário
+
 export const updateService = async (body, userId) => {
   const { name, username, email, password, avatar, background } = body;
 
@@ -79,6 +79,6 @@ export const updateService = async (body, userId) => {
 
   await updateRepository(userId, body);
 
-  // Retorna a resposta de sucesso
+  
   return { message: "User successfully updated" };
 };

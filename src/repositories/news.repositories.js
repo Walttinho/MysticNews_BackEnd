@@ -35,7 +35,6 @@ export const updateNewsRepository = (id, title, text, banner) =>
 export const delNewsRepository = (id) =>
   News.findOneAndDelete({ _id: id });
 
-// Serviço para adicionar um like a uma notícia
 export const newsLikedRepository = (id, userId) =>
   News.findOneAndUpdate(
     { _id: id, "likes.userId": { $nin: [userId] } },
@@ -48,14 +47,14 @@ export const newsLikedRepository = (id, userId) =>
 export const delLikedNewsRepository = (id, userId) =>
   News.findOneAndUpdate({ _id: id }, { $pull: { likes: { userId } } });
 
-export const addCommentNewsRepository = (id, comment, userId) => {
+export const addCommentNewsRepository = (idNews, comment, userId) => {
   let idComment = Math.floor(Date.now() * Math.random()).toString(36);
 
   return News.findOneAndUpdate(
-    { _id: id },
+    { _id: idNews },
     {
       $push: {
-        comments: { idComment, userId, comment, createdAt: new Date() },
+        comments: { idComment, comment, userId, createdAt: new Date() },
       },
     },
     {
@@ -64,8 +63,9 @@ export const addCommentNewsRepository = (id, comment, userId) => {
   );
 };
 
-export const delCommentNewsRepository = (id, idComment, userId) =>
+export const delCommentNewsRepository = (idNews, idComment, userId) =>
   News.findOneAndUpdate(
-    { _id: id },
+    { _id: idNews },
     { $pull: { comments: { idComment, userId } } }
   );
+
