@@ -1,6 +1,7 @@
 {
   "name": "api-Mystic_News",
   "version": "1.0.0",
+  "author": "Walter Netto",
   "type": "module",
   "description": " ",
   "main": "server.js",
