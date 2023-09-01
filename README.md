@@ -108,6 +108,30 @@ Para utilizar a aplicação, siga os seguintes passos:
 
 Lembre-se de que a aplicação depende do servidor backend estar em execução para funcionar corretamente. Certifique-se de manter o servidor ativo enquanto estiver utilizando a aplicação.
 
+## Rotas
+
+Aqui está uma lista das principais rotas da API:
+
+| Método | Rota                              | Descrição                                          |
+| ------ | --------------------------------- | -------------------------------------------------- |
+| POST   | `/auth/login`                     | Autenticação de usuários.                         |
+| POST   | `/user/create`                    | Criar um novo usuário.                            |
+| GET    | `/user`                           | Listar todos os usuários.                        |
+| GET    | `/user/:id`                       | Obter informações de um usuário por ID.          |
+| PATCH  | `/user/:id`                       | Atualizar informações de um usuário por ID.      |
+| GET    | `/news`                           | Listar todas as notícias.                        |
+| GET    | `/news/top`                       | Listar as notícias mais populares.               |
+| GET    | `/news/search`                    | Buscar notícias por título.                     |
+| POST   | `/news/create`                    | Criar uma nova notícia (requer autenticação).    |
+| GET    | `/news/byUser`                    | Listar notícias de um usuário específico.        |
+| GET    | `/news/findById/:id`              | Obter informações de uma notícia por ID.         |
+| PATCH  | `/news/:id`                       | Atualizar informações de uma notícia por ID.     |
+| DELETE | `/news/:id`                       | Excluir uma notícia por ID.                     |
+| PATCH  | `/news/like/:id`                  | Curtir uma notícia por ID (requer autenticação). |
+| PATCH  | `/news/comment/:id`               | Adicionar um comentário a uma notícia por ID.   |
+| PATCH  | `/news/comment/:idNews/:idComment`| Excluir um comentário de uma notícia por IDs.  |
+| GET    | `/doc`                            | Acessar a documentação da API (Swagger UI).     |
+
 ## Contribuição
 Contribuições são bem-vindas! Se você quiser contribuir para este projeto, siga as etapas abaixo:
 1. Faça um fork do repositório
@@ -118,3 +142,6 @@ Contribuições são bem-vindas! Se você quiser contribuir para este projeto, s
 
 ## Licença
 Este projeto está licenciado sob a licença nenhuma
+
+
+

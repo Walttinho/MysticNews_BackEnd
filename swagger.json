@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Mystic BreakNews API Documentation",
-    "description": "Welcome to the Mystic BreakNews API Documentation! Here, you will find comprehensive information about the API's endpoints and how to utilize them. Explore the available routes and test their functionality. Don't forget to register and complete the authorization process to unlock the full potential of the API.",
+    "title": "Mystic News API Documentation",
+    "description": "Welcome to the Mystic News API Documentation! Here, you will find comprehensive information about the API's endpoints and how to utilize them. Explore the available routes and test their functionality. Don't forget to register and complete the authorization process to unlock the full potential of the API.",
     "contact": {
       "email": "walter.netto@live.com"
     },
@@ -10,13 +10,14 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3001",
-      "description": "Local Server"
-    },
-    {
       "url": "https://mystic-brakenews.onrender.com",
       "description": "Web Server"
+    },
+    {
+      "url": "http://localhost:3001",
+      "description": "Local Server"
     }
+    
   ],
   "paths": {
     "/user/create": {

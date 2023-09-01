@@ -1,4 +1,3 @@
-import { notFoundError, unauthorizedError } from "../error/error.js";
 import {
   createRepository,
   findAllRepository,
@@ -70,7 +69,7 @@ export const findAllService = async (limit, offset, currentUrl) => {
 export const topNewsService = async () => {
   const news = await topNewsRepository();
 
-  if (!news) throw notFoundError();
+  if (!news) throw new Error("News not found");
 
   return {
     news: {

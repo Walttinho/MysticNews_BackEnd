@@ -12,8 +12,9 @@ export const createUser = async (req, res) => {
     const user = await createService(body);
 
     return res.status(201).send(user);
-  } catch (e) {
-    res.status(500).send(e.message);
+  } catch (error) {
+    console.error("Error create user:", error);
+    res.status(500).send({ message: "Error create user" });
   }
 };
 
@@ -21,8 +22,9 @@ export const findAllUser = async (req, res) => {
   try {
     const users = await findAllService();
     return res.send(users);
-  } catch (e) {
-    res.status(500).send(e.message);
+  } catch (error) {
+    console.error("Error finding user:", error);
+    res.status(500).send({ message: "Error finding user" });
   }
 };
 
@@ -33,8 +35,9 @@ export const findByIdUser = async (req, res) => {
   try {
     const user = await findByIdService(userId, userIdLogged);
     return res.send(user);
-  } catch (e) {
-    res.status(500).send(e.message);
+  } catch (error) {
+    console.error("Error finding user:", error);
+    res.status(500).send({ message: "Error finding user" });
   }
 };
 
@@ -44,7 +47,8 @@ export const updateUser = async (req, res) => {
   try {
     const response = await updateService(body, userId);
     return res.send(response);
-  } catch (e) {
-    res.status(500).send(e.message);
+  } catch (error) {
+    console.error("Error update user:", error);
+    res.status(500).send({ message: "Error update user" });
   }
 };

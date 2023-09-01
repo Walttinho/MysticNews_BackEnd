@@ -14,7 +14,7 @@ export const loginService = async (email, password) => {
 
   const isPasswordValid = config.compareSync(password, user.password);
 
-  if (!isPasswordValid) throw new Error("Invalid password");
+  if (!isPasswordValid) throw new Error("Wrong password or username");
 
   const token = generateToken(user.id);
 

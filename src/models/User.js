@@ -40,7 +40,7 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-// Modelo para a coleção de usuários
+
 const User = mongoose.model("User", UserSchema);
 
 export default User;

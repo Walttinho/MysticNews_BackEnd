@@ -39,7 +39,7 @@ const NewsSchema = mongoose.Schema({
   },
 });
 
-// Modelo para a coleção de notícias
+
 const News = mongoose.model("News", NewsSchema);
 
 export default News;
