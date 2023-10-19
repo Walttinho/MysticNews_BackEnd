@@ -17,7 +17,6 @@
       "url": "http://localhost:3001",
       "description": "Local Server"
     }
-    
   ],
   "paths": {
     "/user/create": {
@@ -127,9 +126,7 @@
             }
           }
         }
-      }
-    },
-    "/user/{id}": {
+      },
       "patch": {
         "summary": "Update user by id",
         "description": "Route responsible for editing the user by id",
@@ -213,7 +210,7 @@
         }
       }
     },
-        "/news/create": {
+    "/news/create": {
       "post": {
         "summary": "Create a new news",
         "description": "Route responsible for creating a new News",
@@ -472,9 +469,7 @@
             }
           }
         }
-      }
-    },
-    "/news/{id}/": {
+      },
       "delete": {
         "summary": "Delete a News",
         "description": "Route responsible for deleting a News",
